@@ -17,10 +17,10 @@
 
 ### --------------------------------------------------------
 
-#### GitHub地址(附代码) : [C++缓存队列]()
-#### 简书地址   : [C++缓存队列]()
-#### 博客地址   : [C++缓存队列]()
-#### 掘金地址   : [C++缓存队列]()
+#### GitHub地址(附代码) : [C++缓存队列](https://github.com/ChengyangLi/WorkQueue_FreeQueue_HandleSampleBuffer)
+#### 简书地址   : [C++缓存队列](https://www.jianshu.com/p/d6cd32acdc71)
+#### 博客地址   : [C++缓存队列](https://chengyangli.github.io/2018/02/24/ios_cacheQueue/)
+#### 掘金地址   : [C++缓存队列](https://juejin.im/post/5a91315c6fb9a063395c8944)
 
 ### --------------------------------------------------------
 
