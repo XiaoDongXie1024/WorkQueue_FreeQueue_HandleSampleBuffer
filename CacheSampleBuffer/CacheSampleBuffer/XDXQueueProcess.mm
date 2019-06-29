@@ -8,9 +8,12 @@
 
 #import "XDXQueueProcess.h"
 #import <pthread.h>
+#include "log4cplus.h"
 
 #pragma mark - Queue Size   设置队列的长度，不可过长
 const int XDXCustomQueueSize = 3;
+
+const static char *kModuleName = "XDXQueueProcess";
 
 #pragma mark - Init
 XDXCustomQueueProcess::XDXCustomQueueProcess() {
@@ -31,7 +34,7 @@ XDXCustomQueueProcess::XDXCustomQueueProcess() {
     pthread_mutex_init(&free_queue_mutex, NULL);
     pthread_mutex_init(&work_queue_mutex, NULL);
     
-    NSLog(@"XDXCustomQueueProcess Init finish !");
+    log4cplus_info(kModuleName, "%s: Init finish !",__func__);
 }
 
 void XDXCustomQueueProcess::InitQueue(XDXCustomQueue *queue, XDXCustomQueueType type) {
@@ -46,12 +49,12 @@ void XDXCustomQueueProcess::InitQueue(XDXCustomQueue *queue, XDXCustomQueueType 
 #pragma mark - Main Operation
 void XDXCustomQueueProcess::EnQueue(XDXCustomQueue *queue, XDXCustomQueueNode *node) {
     if (queue == NULL) {
-        NSLog(@"XDXCustomQueueProcess Enqueue : current queue is NULL");
+        log4cplus_debug(kModuleName, "%s: current queue is NULL",__func__);
         return;
     }
     
     if (node==NULL) {
-        NSLog(@"XDXCustomQueueProcess Enqueue : current node is NULL");
+        log4cplus_debug(kModuleName, "%s: current node is NUL",__func__);
         return;
     }
     
@@ -75,7 +78,7 @@ void XDXCustomQueueProcess::EnQueue(XDXCustomQueue *queue, XDXCustomQueueNode *n
             queue->front = node;
         }
         queue->size += 1;
-        NSLog(@"XDXCustomQueueProcess Enqueue : free queue size=%d",queue->size);
+        log4cplus_debug(kModuleName, "%s: free queue size=%d",__func__,queue->size);
         pthread_mutex_unlock(&free_queue_mutex);
     }
     
@@ -92,14 +95,14 @@ void XDXCustomQueueProcess::EnQueue(XDXCustomQueue *queue, XDXCustomQueueNode *n
             queue->rear         = node;
         }
         queue->size += 1;
-        NSLog(@"XDXCustomQueueProcess Enqueue : work queue size=%d",queue->size);
+        log4cplus_debug(kModuleName, "%s: work queue size=%d",__func__,queue->size);
         pthread_mutex_unlock(&work_queue_mutex);
     }
 }
 
 XDXCustomQueueNode* XDXCustomQueueProcess::DeQueue(XDXCustomQueue *queue) {
     if (queue == NULL) {
-        NSLog(@"XDXCustomQueueProcess DeQueue : current queue is NULL");
+        log4cplus_debug(kModuleName, "%s: current queue is NULL",__func__);
         return NULL;
     }
     
@@ -111,7 +114,7 @@ XDXCustomQueueNode* XDXCustomQueueProcess::DeQueue(XDXCustomQueue *queue) {
     element = queue->front;
     if(element == NULL) {
         pthread_mutex_unlock(queue_mutex);
-        NSLog(@"XDXCustomQueueProcess DeQueue : The node is NULL");
+        log4cplus_debug(kModuleName, "%s: The node is NULL",__func__);
         return NULL;
     }
     
@@ -119,18 +122,18 @@ XDXCustomQueueNode* XDXCustomQueueProcess::DeQueue(XDXCustomQueue *queue) {
     queue->size -= 1;
     pthread_mutex_unlock(queue_mutex);
     
-    NSLog(@"XDXCustomQueueProcess DeQueue : %s size=%d",type,queue->size);
+    log4cplus_debug(kModuleName, "%s: type=%s size=%d",__func__,type,queue->size);
     return element;
 }
 
 void XDXCustomQueueProcess::ResetFreeQueue(XDXCustomQueue *workQueue, XDXCustomQueue *freeQueue) {
     if (workQueue == NULL) {
-        NSLog(@"XDXCustomQueueProcess ResetFreeQueue : The WorkQueue is NULL");
+        log4cplus_debug(kModuleName, "%s: The WorkQueue is NULL",__func__);
         return;
     }
     
     if (freeQueue == NULL) {
-        NSLog(@"XDXCustomQueueProcess ResetFreeQueue : The FreeQueue is NULL");
+        log4cplus_debug(kModuleName, "%s: The FreeQueue is NULL",__func__);
         return;
     }
     
@@ -143,7 +146,7 @@ void XDXCustomQueueProcess::ResetFreeQueue(XDXCustomQueue *workQueue, XDXCustomQ
             EnQueue(freeQueue, node);
         }
     }
-    NSLog(@"XDXCustomQueueProcess ResetFreeQueue : The work queue size is %d, free queue size is %d",workQueue->size, freeQueue->size);
+    log4cplus_info(kModuleName, "%s: ResetFreeQueue : The work queue size is %d, free queue size is %d",__func__,workQueue->size, freeQueue->size);
 }
 
 void XDXCustomQueueProcess::ClearXDXCustomQueue(XDXCustomQueue *queue) {
@@ -151,7 +154,8 @@ void XDXCustomQueueProcess::ClearXDXCustomQueue(XDXCustomQueue *queue) {
         XDXCustomQueueNode *node = this->DeQueue(queue);
         this->FreeNode(node);
     }
-    NSLog(@"XDXCustomQueueProcess Clear XDXCustomQueueProcess queue");
+
+    log4cplus_info(kModuleName, "%s: Clear XDXCustomQueueProcess queue",__func__);
 }
 
 void XDXCustomQueueProcess::FreeNode(XDXCustomQueueNode* node) {
@@ -159,5 +163,4 @@ void XDXCustomQueueProcess::FreeNode(XDXCustomQueueNode* node) {
         free(node->data);
         free(node);
     }
-    
 }

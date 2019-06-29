@@ -37,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2341BD9322C76D6300D51DCD /* log4cplus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log4cplus.h; sourceTree = "<group>"; };
 		642C949A2008B46C0021D54A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		642C949C2008BD240021D54A /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		64A066FC20035D2B0081A417 /* CacheSampleBuffer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CacheSampleBuffer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +86,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2341BD9222C76D5800D51DCD /* 3rd */ = {
+			isa = PBXGroup;
+			children = (
+				2341BD9322C76D6300D51DCD /* log4cplus.h */,
+			);
+			path = 3rd;
+			sourceTree = "<group>";
+		};
 		642C94992008B46C0021D54A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -118,6 +127,7 @@
 		64A066FE20035D2B0081A417 /* CacheSampleBuffer */ = {
 			isa = PBXGroup;
 			children = (
+				2341BD9222C76D5800D51DCD /* 3rd */,
 				64A066FF20035D2B0081A417 /* AppDelegate.h */,
 				64A0670020035D2B0081A417 /* AppDelegate.m */,
 				64A0670220035D2B0081A417 /* ViewController.h */,

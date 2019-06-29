@@ -27,6 +27,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "XDXQueueProcess.h"
 #import <pthread.h>
+#include "log4cplus.h"
 
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -34,6 +35,8 @@
 #define currentResolutionW 1920
 #define currentResolutionH 1080
 #define currentResolution AVCaptureSessionPreset1920x1080
+
+const static char *kModuleName = "MainVC";
 
 @interface ViewController ()<AVCaptureVideoDataOutputSampleBufferDelegate>
 {
@@ -55,14 +58,14 @@
         // 从队列取出在相机回调中放入队列的线程
         XDXCustomQueueNode *node = _captureBufferQueue->DeQueue(_captureBufferQueue->m_work_queue);
         if (node == NULL) {
-            NSLog(@"Crop handleCropThread : Data node is NULL");
+            log4cplus_debug(kModuleName, "Data node is NULL");
             usleep(10*1000);
             continue;
         }
         
         CMSampleBufferRef sampleBuffer     = (CMSampleBufferRef)node->data;
         // 打印结点的index，如果连续则说明在相机回调中放入的samplebuffer是连续的
-        NSLog(@"Test index : %ld",node->index);
+        log4cplus_debug(kModuleName, "Test index : %ld",node->index);
         
         /* 可在此处理从队列中拿到的Buffer，用完后记得释放内存并将结点重新放回空闲队列
          * ........
@@ -178,14 +181,14 @@ void * startCropTask(void *param) {
 - (void)addBufferToWorkQueueWithSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     XDXCustomQueueNode *node = _captureBufferQueue->DeQueue(_captureBufferQueue->m_free_queue);
     if (node == NULL) {
-        NSLog(@"XDXCustomQueueProcess addBufferToWorkQueueWithSampleBuffer : Data in , the node is NULL !");
+        log4cplus_debug(kModuleName, "Data in , the node is NULL !");
         return;
     }
     CFRetain(sampleBuffer);
     node->data = sampleBuffer;
     _captureBufferQueue->EnQueue(_captureBufferQueue->m_work_queue, node);
 
-    NSLog(@"XDXCustomQueueProcess addBufferToWorkQueueWithSampleBuffer : Data in ,  work size = %d, free size = %d !",_captureBufferQueue->m_work_queue->size, _captureBufferQueue->m_free_queue->size);
+    log4cplus_debug(kModuleName, "Data in ,  work size = %d, free size = %d !",_captureBufferQueue->m_work_queue->size, _captureBufferQueue->m_free_queue->size);
 }
 
 @end
